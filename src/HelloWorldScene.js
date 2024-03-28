@@ -1,35 +1,148 @@
-import Phaser from 'phaser'
+import Phaser from "phaser";
+import Planet from "./Classes/Planet";
 
 export default class HelloWorldScene extends Phaser.Scene {
-	constructor() {
-		super('hello-world')
-	}
+  constructor() {
+    super("hello-world");
+  }
 
-	preload() {
-		this.load.setBaseURL('https://labs.phaser.io')
+  canExplore = false;
+  balance = 1000;
+  bet = 10;
 
-		this.load.image('sky', 'assets/skies/space3.png')
-		this.load.image('logo', 'assets/sprites/phaser3-logo.png')
-		this.load.image('red', 'assets/particles/red.png')
-	}
+  preload() {
+    this.load.image("brownPlanet", "brownPlanet.png");
+    this.load.image("greenPlanet", "greenPlanet.png");
+    this.load.image("redPlanet", "redPlanet.png");
+  }
 
-	create() {
-		this.add.image(400, 300, 'sky')
+  create() {
+    this.multyplier = 1;
 
-		const particles = this.add.particles('red')
+    this.container = this.add.container(540, 1700);
+    this.lastPlanetPositionX = 0;
+    this.lastPlanetPositionY = 0;
 
-		const emitter = particles.createEmitter({
-			speed: 100,
-			scale: { start: 1, end: 0 },
-			blendMode: 'ADD',
-		})
+    this.planet = new Planet(this, 0, 0, "brownPlanet");
+    this.add.existing(this.planet);
+    this.container.add(this.add.image(0, 0, "greenPlanet"));
 
-		const logo = this.physics.add.image(400, 100, 'logo')
+    this.addPlanet(-300, -750);
+    this.addPlanet(0, -750);
+    this.addPlanet(300, -750);
 
-		logo.setVelocity(100, 200)
-		logo.setBounce(1, 1)
-		logo.setCollideWorldBounds(true)
+    this.addStartExplorationButton();
+    this.addEndExplorationButton();
+    this.addHUD();
+  }
+  update() {}
 
-		emitter.startFollow(logo)
-	}
+  addHUD() {
+    this.balanceText = this.add.text(100, 100, `Balance: ${this.balance}`, {
+      fontSize: "50px",
+      strokeThickness: 2,
+      stroke: "#ffffff",
+      align: "center",
+    });
+
+    this.multyplierText = this.add.text(
+      100,
+      200,
+      `Multyplier: ${this.multyplier}`,
+      {
+        fontSize: "50px",
+        strokeThickness: 2,
+        stroke: "#ffffff",
+        align: "center",
+      }
+    );
+
+    this.betText = this.add.text(800, 100, `Bet: ${this.bet}`, {
+      fontSize: "50px",
+      strokeThickness: 2,
+      stroke: "#ffffff",
+      align: "center",
+    });
+  }
+
+  addPlanet(x, y) {
+    this.planet = new Planet(this, x, y, "brownPlanet");
+    this.add.existing(this.planet);
+    this.container.add(this.planet);
+  }
+
+  addStartExplorationButton() {
+    this.startExploration = this.add
+      .text(540, 2000, "START\nEXPLORATION", {
+        fontSize: "70px",
+        strokeThickness: 5,
+        stroke: "#ffffff",
+        align: "center",
+      })
+      .setOrigin(0.5, 0.5)
+      .setInteractive();
+
+    this.startExploration.once("pointerup", () => {
+      this.startExploration.setAlpha(0);
+      this.canExplore = true;
+      this.balance -= this.bet;
+      this.balanceText.text = `Balance: ${this.balance}`;
+      this.endExploration.setAlpha(1);
+    });
+  }
+
+  addEndExplorationButton() {
+    this.endExploration = this.add
+      .text(540, 2000, "END\nEXPLORATION", {
+        fontSize: "70px",
+        strokeThickness: 5,
+        stroke: "#ffffff",
+        align: "center",
+      })
+      .setOrigin(0.5, 0.5)
+      .setInteractive()
+      .setAlpha(0);
+
+    this.endExploration.once("pointerup", () => {
+      this.endExploration.setAlpha(0);
+      this.canExplore = false;
+      this.balance += this.bet * this.multyplier;
+      this.balanceText.text = `Balance: ${this.balance}`;
+      this.resetScene();
+    });
+  }
+
+  movePlanets(x, y) {
+    var currentX = this.container.x;
+    var currentY = this.container.y;
+
+    this.tweens.add({
+      targets: this.container,
+      x: currentX - (x - this.lastPlanetPositionX),
+      y: currentY - (y - this.lastPlanetPositionY),
+      yoyo: false,
+      repeat: 0,
+      ease: "Sine.easeIn",
+      duration: 500,
+      onComplete: () => {
+        this.lastPlanetPositionX = x;
+        this.lastPlanetPositionY = y;
+
+        console.log(this.container.x);
+        console.log(this.container.y);
+
+        this.addPlanet(x - 300, y - 750);
+        this.addPlanet(x, y - 750);
+        this.addPlanet(x + 300, y - 750);
+      },
+    });
+  }
+
+  resetScene() {
+    this.time.delayedCall(1000, () => {
+      this.scene.restart();
+    });
+  }
+
+  createNewPlanet() {}
 }
