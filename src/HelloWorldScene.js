@@ -14,6 +14,11 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.load.image("brownPlanet", "brownPlanet.png");
     this.load.image("greenPlanet", "greenPlanet.png");
     this.load.image("redPlanet", "redPlanet.png");
+    this.load.image("Planet1", "Planet1.png");
+    this.load.image("Planet2", "Planet2.png");
+    this.load.image("Planet3", "Planet3.png");
+    this.load.image("Planet4", "Planet4.png");
+
   }
 
   create() {

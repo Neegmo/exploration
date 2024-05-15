@@ -1,11 +1,12 @@
 export default class BaseTower extends Phaser.GameObjects.Container {
   randomChanceSequence = [90, 75, 60];
   randomQuoteSequence = [1.1, 1.33, 1.67];
+  randomTextureSequence = ["Planet1", "Planet2", "Planet3"]
 
   constructor(scene, x, y, texture) {
     super(scene, x, y);
 
-    this.planet = new Phaser.GameObjects.Sprite(scene, 0, 0, texture);
+    this.planet = new Phaser.GameObjects.Sprite(scene, 0, 0, texture).setScale(0.5, 0.5);
     this.add(this.planet);
 
     this.scene = scene;
@@ -44,6 +45,7 @@ export default class BaseTower extends Phaser.GameObjects.Container {
     let randomIndex = Phaser.Math.Between(0, 2);
     this.randomChance = this.randomChanceSequence[randomIndex];
     this.randomQuote = this.randomQuoteSequence[randomIndex];
+    this.planet.setTexture(this.randomTextureSequence[randomIndex]);
   }
 
   explorationSuccesfull() {
