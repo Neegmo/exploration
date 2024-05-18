@@ -18,6 +18,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.load.image("Planet2", "Planet2.png");
     this.load.image("Planet3", "Planet3.png");
     this.load.image("Planet4", "Planet4.png");
+    this.load.image("Rocket", "Rocket.png");
+    this.load.image("Explosion", "Explosion.png");
+    this.load.image("Check", "Check.png");
+
 
   }
 
@@ -28,10 +32,6 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.lastPlanetPositionX = 0;
     this.lastPlanetPositionY = 0;
 
-    this.planet = new Planet(this, 0, 0, "brownPlanet");
-    this.add.existing(this.planet);
-    this.container.add(this.add.image(0, 0, "greenPlanet"));
-
     this.addPlanet(-300, -750);
     this.addPlanet(0, -750);
     this.addPlanet(300, -750);
@@ -41,6 +41,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.addHUD();
   }
   update() {}
+
 
   addHUD() {
     this.balanceText = this.add.text(100, 100, `Balance: ${this.balance}`, {
@@ -93,7 +94,14 @@ export default class HelloWorldScene extends Phaser.Scene {
       this.balance -= this.bet;
       this.balanceText.text = `Balance: ${this.balance}`;
       this.endExploration.setAlpha(1);
+
+      this.createRocket()
     });
+  }
+
+  createRocket() {
+    this.rocket = this.add.image(0, 0, "Rocket").setScale(0.8, 0.8)
+    this.container.add(this.rocket)
   }
 
   addEndExplorationButton() {
@@ -128,7 +136,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       yoyo: false,
       repeat: 0,
       ease: "Sine.easeIn",
-      duration: 500,
+      duration: 200,
       onComplete: () => {
         this.lastPlanetPositionX = x;
         this.lastPlanetPositionY = y;
@@ -149,5 +157,4 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
   }
 
-  createNewPlanet() {}
 }
