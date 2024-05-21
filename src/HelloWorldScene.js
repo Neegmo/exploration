@@ -23,6 +23,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.load.image("Check", "Check.png");
     this.load.image("StartButton", "StartButton.png");
     this.load.image("ClaimButton", "ClaimButton.png");
+    this.load.image("IncreaseBet", "Plus.png");
+    this.load.image("DecreaseBet", "Minus.png");
   }
 
   create() {
@@ -39,21 +41,20 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.addStartExplorationButton();
     this.addEndExplorationButton();
     this.addHUD();
+
+    this.createIncreaseBetButton();
+    this.createDecreaseBetButton();
   }
   update() {}
 
   addHUD() {
-    this.balanceText = this.add.text(
-      10,
-      2100,
-      `Balance: ${this.balance.toFixed(2)}`,
-      {
+    this.balanceText = this.add
+      .text(270, 2120, `Balance: ${this.balance.toFixed(2)}`, {
         fontSize: "50px",
         strokeThickness: 2,
         stroke: "#ffffff",
-        align: "center",
-      }
-    );
+      })
+      .setOrigin(0.5, 0.5);
 
     this.multyplierText = this.add
       .text(540, 150, `MULTYPLIER: X${this.multyplier}`, {
@@ -73,12 +74,14 @@ export default class HelloWorldScene extends Phaser.Scene {
       duration: 700,
     });
 
-    this.betText = this.add.text(800, 2100, `Bet:${this.bet}`, {
-      fontSize: "50px",
-      strokeThickness: 2,
-      stroke: "#ffffff",
-      align: "center",
-    });
+    this.betText = this.add
+      .text(880, 2120, `Bet:${this.bet}`, {
+        fontSize: "50px",
+        strokeThickness: 2,
+        stroke: "#ffffff",
+        align: "center",
+      })
+      .setOrigin(0.5, 0.5);
   }
 
   addPlanet(x, y) {
@@ -119,6 +122,31 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
   }
 
+  createIncreaseBetButton() {
+    this.increaseBetButton = this.add
+      .image(1030, 2120, "IncreaseBet")
+      .setScale(3, 3)
+      .setInteractive();
+
+    this.increaseBetButton.on("pointerup", () => {
+      this.bet += 10;
+      this.betText.text = `Bet:${this.bet}`;
+    });
+  }
+
+  createDecreaseBetButton() {
+    this.decreaseBetButton = this.add
+      .image(730, 2120, "DecreaseBet")
+      .setScale(3, 3)
+      .setInteractive();
+
+    this.decreaseBetButton.on("pointerup", () => {
+      if (this.bet === 10) return;
+      this.bet -= 10;
+      this.betText.text = `Bet:${this.bet}`;
+    });
+  }
+
   createRocket() {
     this.rocket = this.add.image(0, 0, "Rocket").setDepth(10);
     this.container.add(this.rocket);
@@ -143,13 +171,16 @@ export default class HelloWorldScene extends Phaser.Scene {
         console.log(this.container.x);
         console.log(this.container.y);
 
+        this.oldPlanet1 = this.planet1;
+        this.planet1 = this.addPlanet(x - 300, y - 850);
+        this.oldPlanet2 = this.planet2;
+        this.planet2 = this.addPlanet(x, y - 850);
+        this.oldPlanet3 = this.planet3;
+        this.planet3 = this.addPlanet(x + 300, y - 850);
         this.time.delayedCall(200, () => {
-          this.planet1.destroy();
-          this.planet1 = this.addPlanet(x - 300, y - 850);
-          this.planet2.destroy();
-          this.planet2 = this.addPlanet(x, y - 850);
-          this.planet3.destroy();
-          this.planet3 = this.addPlanet(x + 300, y - 850);
+          this.oldPlanet1.destroy();
+          this.oldPlanet2.destroy();
+          this.oldPlanet3.destroy();
         });
       },
     });
