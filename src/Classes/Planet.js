@@ -21,6 +21,7 @@ export default class Planet extends Phaser.GameObjects.Container {
 
     this.planet.on("pointerup", () => {
       if (!scene.canExplore) return;
+      scene.canExplore = false;
       let randomNumber = Phaser.Math.Between(0, 100);
 
       if (randomNumber > this.randomChance) {
@@ -33,17 +34,32 @@ export default class Planet extends Phaser.GameObjects.Container {
     this.text = new Phaser.GameObjects.Text(
       scene,
       0,
-      -200,
-      `${this.randomChance}%\n\nX${this.randomQuote}`,
+      -180,
+      `MULTIPLYER:\nX${this.randomQuote}`,
       {
         fontSize: "40px",
-        strokeThickness: 2,
+        strokeThickness: 1,
         stroke: "#ffffff",
         align: "center",
         fontStyle: "bold",
       }
     ).setOrigin(0.5, 0.5);
     this.add(this.text);
+
+    this.chanceText = new Phaser.GameObjects.Text(
+      scene,
+      0,
+      +180,
+      `CHANCE:\n${this.randomChance}%`,
+      {
+        fontSize: "40px",
+        strokeThickness: 1,
+        stroke: "#ffffff",
+        align: "center",
+        fontStyle: "bold",
+      }
+    ).setOrigin(0.5, 0.5);
+    this.add(this.chanceText);
   }
 
   getRandomChance() {

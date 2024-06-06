@@ -44,6 +44,16 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     this.createIncreaseBetButton();
     this.createDecreaseBetButton();
+
+    this.collectText = this.add
+      .text(540, 1750, `COLLECT: ${this.bet * this.multyplier}`, {
+        fontSize: "65px",
+        strokeThickness: 1,
+        stroke: "#ffffff",
+        align: "center",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5, 0.5);
   }
   update() {}
 
@@ -103,7 +113,8 @@ export default class HelloWorldScene extends Phaser.Scene {
       this.balance -= this.bet;
       this.balanceText.text = `Balance: ${this.balance.toFixed(2)}`;
       this.endExploration.setAlpha(1);
-
+      this.decreaseBetButton.setAlpha(0);
+      this.increaseBetButton.setAlpha(0);
       this.createRocket();
     });
   }
@@ -153,6 +164,8 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   movePlanets(x, y) {
+    this.destroyPlanets(x, y);
+
     var currentX = this.container.x;
     var currentY = this.container.y;
 
@@ -171,19 +184,25 @@ export default class HelloWorldScene extends Phaser.Scene {
         console.log(this.container.x);
         console.log(this.container.y);
 
-        this.oldPlanet1 = this.planet1;
-        this.planet1 = this.addPlanet(x - 300, y - 850);
-        this.oldPlanet2 = this.planet2;
-        this.planet2 = this.addPlanet(x, y - 850);
-        this.oldPlanet3 = this.planet3;
-        this.planet3 = this.addPlanet(x + 300, y - 850);
-        this.time.delayedCall(200, () => {
-          this.oldPlanet1.destroy();
-          this.oldPlanet2.destroy();
-          this.oldPlanet3.destroy();
-        });
+        this.canExplore = true;
+        this.collectText.text = `COLLECT: ${(
+          this.bet * this.multyplier
+        ).toFixed(2)}`;
       },
     });
+  }
+
+  destroyPlanets(x, y) {
+    this.oldPlanet1 = this.planet1;
+    this.planet1 = this.addPlanet(x - 300, y - 850);
+    this.oldPlanet2 = this.planet2;
+    this.planet2 = this.addPlanet(x, y - 850);
+    this.oldPlanet3 = this.planet3;
+    this.planet3 = this.addPlanet(x + 300, y - 850);
+    this.oldPlanet1.destroy();
+    this.oldPlanet2.destroy();
+    this.oldPlanet3.destroy();
+    this.container.bringToTop(this.rocket);
   }
 
   resetScene() {
