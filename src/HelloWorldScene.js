@@ -11,20 +11,28 @@ export default class HelloWorldScene extends Phaser.Scene {
   bet = 10;
 
   preload() {
-    this.load.image("brownPlanet", "brownPlanet.png");
-    this.load.image("greenPlanet", "greenPlanet.png");
-    this.load.image("redPlanet", "redPlanet.png");
-    this.load.image("Planet1", "Planet1.png");
-    this.load.image("Planet2", "Planet2.png");
-    this.load.image("Planet3", "Planet3.png");
-    this.load.image("Planet4", "Planet4.png");
-    this.load.image("Rocket", "RocketV2.png");
-    this.load.image("Explosion", "Explosion.png");
-    this.load.image("Check", "Check.png");
-    this.load.image("StartButton", "StartButton.png");
-    this.load.image("ClaimButton", "ClaimButton.png");
-    this.load.image("IncreaseBet", "Plus.png");
-    this.load.image("DecreaseBet", "Minus.png");
+    this.load.image("brownPlanet", "pictures/brownPlanet.png");
+    this.load.image("greenPlanet", "pictures/greenPlanet.png");
+    this.load.image("redPlanet", "pictures/redPlanet.png");
+    this.load.image("Planet1", "pictures/Planet1.png");
+    this.load.image("Planet2", "pictures/Planet2.png");
+    this.load.image("Planet3", "pictures/Planet3.png");
+    this.load.image("Planet4", "pictures/Planet4.png");
+    this.load.image("Rocket", "pictures/RocketV2.png");
+    this.load.image("Explosion", "pictures/Explosion.png");
+    this.load.image("Check", "pictures/Check.png");
+    this.load.image("StartButton", "pictures/StartButton.png");
+    this.load.image("ClaimButton", "pictures/ClaimButton.png");
+    this.load.image("IncreaseBet", "pictures/Plus.png");
+    this.load.image("DecreaseBet", "pictures/Minus.png");
+
+    this.load.audio("BGMusic", ["sounds/BGMusic.mp3"]);
+    this.load.audio("claim", ["sounds/claim.mp3"]);
+    this.load.audio("click", ["sounds/click.mp3"]);
+    this.load.audio("flying", ["sounds/flying.mp3"]);
+    this.load.audio("lose", ["sounds/lose.mp3"]);
+    this.load.audio("progress", ["sounds/progress.mp3"]);
+    this.load.audio("win", ["sounds/win.mp3"]);
   }
 
   create() {
@@ -54,8 +62,38 @@ export default class HelloWorldScene extends Phaser.Scene {
         fontStyle: "bold",
       })
       .setOrigin(0.5, 0.5);
+
+    this.addSounds();
   }
   update() {}
+
+  addSounds() {
+    if (!this.BGMusic || !this.BGMusic.isPlaying) {
+      this.BGMusic = this.sound.add("BGMusic", { loop: true, volume: 0.4 });
+      this.BGMusic.play();
+    }
+    if (!this.claimSound || !this.claimSound.isPlaying) {
+      this.claimSound = this.sound.add("claim", { loop: false, volume: 0.4 });
+    }
+    if (!this.clickSound || !this.clickSound.isPlaying) {
+      this.clickSound = this.sound.add("click", { loop: false, volume: 0.4 });
+    }
+    if (!this.flyingSound || !this.flyingSound.isPlaying) {
+      this.flyingSound = this.sound.add("flying", { loop: false, volume: 0.4 });
+    }
+    if (!this.loseSound || !this.loseSound.isPlaying) {
+      this.loseSound = this.sound.add("lose", { loop: false, volume: 0.4 });
+    }
+    if (!this.progressSound || !this.progressSound.isPlaying) {
+      this.progressSound = this.sound.add("progress", {
+        loop: false,
+        volume: 0.4,
+      });
+    }
+    if (!this.winSound || !this.winSound.isPlaying) {
+      this.winSound = this.sound.add("win", { loop: false, volume: 0.4 });
+    }
+  }
 
   addHUD() {
     this.balanceText = this.add
@@ -125,6 +163,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       .setAlpha(0);
 
     this.endExploration.once("pointerup", () => {
+      this.claimSound.play();
       this.endExploration.setAlpha(0);
       this.canExplore = false;
       this.balance += this.bet * this.multyplier;
@@ -164,6 +203,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   movePlanets(x, y) {
+    this.progressSound.play();
     this.destroyPlanets(x, y);
 
     var currentX = this.container.x;
