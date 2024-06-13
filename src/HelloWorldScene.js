@@ -141,6 +141,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   addStartExplorationButton() {
+    this.clickSound.play();
     this.startExploration = this.add
       .image(540, 1900, "StartButton")
       .setInteractive();

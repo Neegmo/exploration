@@ -21,7 +21,6 @@ export default class Planet extends Phaser.GameObjects.Container {
 
     this.planet.on("pointerup", () => {
       if (!scene.canExplore) return;
-      scene.clickSound.play();
       scene.canExplore = false;
       let randomNumber = Phaser.Math.Between(0, 100);
 
