@@ -141,7 +141,6 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   addStartExplorationButton() {
-    this.clickSound.play();
     this.startExploration = this.add
       .image(540, 1900, "StartButton")
       .setInteractive();
@@ -155,6 +154,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       this.decreaseBetButton.setAlpha(0);
       this.increaseBetButton.setAlpha(0);
       this.createRocket();
+      this.clickSound.play();
     });
   }
   addEndExplorationButton() {
