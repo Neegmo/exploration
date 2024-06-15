@@ -21,6 +21,7 @@ export default class Planet extends Phaser.GameObjects.Container {
 
     this.planet.on("pointerup", () => {
       if (!scene.canExplore) return;
+      this.scene.flyingSound.play();
       scene.canExplore = false;
       let randomNumber = Phaser.Math.Between(0, 100);
 
@@ -71,7 +72,6 @@ export default class Planet extends Phaser.GameObjects.Container {
   }
 
   startSuccessfulExploration() {
-    this.scene.flyingSound.play();
     this.scene.tweens.add({
       targets: this.scene.rocket,
       x: this.x,
@@ -87,7 +87,6 @@ export default class Planet extends Phaser.GameObjects.Container {
   }
 
   startFailedExploration() {
-    this.scene.winSound.play();
     this.scene.tweens.add({
       targets: this.scene.rocket,
       x: this.x,

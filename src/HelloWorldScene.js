@@ -11,6 +11,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   bet = 10;
 
   preload() {
+    this.load.image("BG", "pictures/BG.png");
     this.load.image("brownPlanet", "pictures/brownPlanet.png");
     this.load.image("greenPlanet", "pictures/greenPlanet.png");
     this.load.image("redPlanet", "pictures/redPlanet.png");
@@ -36,6 +37,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(0, 0, "BG").setOrigin(0, 0);
     this.multyplier = 1;
 
     this.container = this.add.container(540, 1500);
@@ -204,7 +206,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   movePlanets(x, y) {
-    this.progressSound.play();
+    // this.progressSound.play();
     this.destroyPlanets(x, y);
 
     var currentX = this.container.x;
