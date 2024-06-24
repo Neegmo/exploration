@@ -19,10 +19,13 @@ export default class Planet extends Phaser.GameObjects.Container {
 
     this.planet.setInteractive();
 
-    this.planet.on("pointerup", () => {
+    this.planet.once("pointerup", () => {
       if (!scene.canExplore) return;
       this.scene.flyingSound.play();
+
       scene.canExplore = false;
+      scene.endExploration.setAlpha(0);
+
       let randomNumber = Phaser.Math.Between(0, 100);
 
       if (randomNumber > this.randomChance) {
@@ -102,6 +105,7 @@ export default class Planet extends Phaser.GameObjects.Container {
   }
 
   explorationSuccesfull() {
+    this.scene.endExploration.setAlpha(1);
     this.scene.winSound.play();
     this.scene.multyplier = this.scene.multyplier * this.randomQuote;
     this.scene.multyplierText.text = `MULTYPLIER: X${this.scene.multyplier.toFixed(

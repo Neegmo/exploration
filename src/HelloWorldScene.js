@@ -7,6 +7,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   canExplore = false;
+  canClaim = false;
   balance = 1000;
   bet = 10;
 
