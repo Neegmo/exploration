@@ -85,7 +85,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       this.flyingSound = this.sound.add("flying", { loop: false, volume: 0.4 });
     }
     if (!this.loseSound || !this.loseSound.isPlaying) {
-      this.loseSound = this.sound.add("lose", { loop: false, volume: 0.4 });
+      this.loseSound = this.sound.add("lose", { loop: false, volume: 1 });
     }
     if (!this.progressSound || !this.progressSound.isPlaying) {
       this.progressSound = this.sound.add("progress", {
